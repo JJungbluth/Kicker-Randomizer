@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Kicker Teamrandomizer</title>
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css"
+    <link href="kickerRandomizer.css" rel="stylesheet">
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
+    <script>
+        var players = ["", "", "", "", "", "", "", ""];
+        var nOfPlayers = 0;
+
+        $(document).ready(function() {
+            printArray(players);
+            $("#randomize2Teams").attr("class", "btn btn-primary disabled");
+            $("#randomize4Teams").attr("class", "btn btn-primary disabled");
+            $("#name").focus();
+
+            $("#addPlayer").click(function() { //ADD PLAYER BUTTON
+                var name = $("#name").val();
+                nOfPlayers++;
+                console.log(name + " added to Array");
+                putNameInArry(name);
+                $("#name").val("");
+                $("#name").focus();
+                if (nOfPlayers != 4) {
+                    $("#randomize2Teams").attr("class", "btn btn-primary disabled");
+                } else {
+                    $("#randomize2Teams").attr("class", "btn btn-primary");
+                }
+                if (nOfPlayers != 8) {
+                    $("#randomize4Teams").attr("class", "btn btn-primary disabled");
+                } else {
+                    $("#randomize4Teams").attr("class", "btn btn-primary");
+                }
+            });
+
+
+            $("#name").keyup(function(event) { //EINGABE MIT EINGABETASTE
+                if (event.keyCode == 13) {
+                    $("#addPlayer").click();
+                }
+            });
+
+            $("#reset").click(function() { //RESET BUTTON
+                deleteArray(players);
+                clearTable();
+                printArray(players);
+                $("#playerList").children("p").remove();
+                nOfPlayers = 0;
+                $("#randomize2Teams").attr("class", "btn btn-primary disabled");
+                $("#randomize4Teams").attr("class", "btn btn-primary disabled");
+                $("#name").focus();
+            });
+
+            $("#randomize2Teams").click(function() { //RANDOMIZE 2 TEAMS BUTTON
+                clearTable();
+                putTeamsTogether(4, 2);
+                $("#playerList").children("p").remove();
+                $("#randomize2Teams").attr("class", "btn btn-primary disabled");
+                $("#randomize4Teams").attr("class", "btn btn-primary disabled");
+            });
+
+            $("#randomize4Teams").click(function() { //RANDOMIZE 4 TEAMS BUTTON
+                clearTable();
+                putTeamsTogether(8, 4);
+                $("#playerList").children("p").remove();
+                $("#randomize2Teams").attr("class", "btn btn-primary disabled");
+                $("#randomize4Teams").attr("class", "btn btn-primary disabled");
+            });
+        });
+
+        function clearTable() {
+            for (var i = 1; i <= 4; i++) {
+                $(".team" + i).text("");
+            }
+        }
+
+        function putNameIntoPlayerList(name) {
+            $("#playerList").append("<p>" + (nOfPlayers) + ". " + name + "</p>");
+        }
+
+        // Process of putting Players into Array........................................
+        function putNameInArry(name) {
+            for (var i = 0; i < players.length; i++) {
+                if (players[i] == "") {
+                    players[i] = name;
+                    printArray(players);
+                    putNameIntoPlayerList(name);
+                    return;
+                }
+            }
+            alert("Maximale Anzahl von Spielern erreicht!(8)");
+        }
+
+        // Process of picking random players............................................
+        function putTeamsTogether(player, teams) { // n= amount of teams
+            for (var i = 1; i <= teams; i++) {
+                putPlayerInTeam(rng(player) - 1, i);
+                player--;
+                putPlayerInTeam(rng(player) - 1, i);
+                player--;
+                printArray(players);
+            }
+        }
+
+        function putPlayerInTeam(player, team) {
+            var p1 = pickPlayerFromArray(player);
+            var selector = ".team" + team + ":empty:first";
+            //console.log(selector + " " + p1);
+            $(selector).html("<font color='white'>" + p1 + "</font>");
+        }
+
+        function pickPlayerFromArray(n) {
+            var selectedPlayer = players[n];
+            deletePlayer(n);
+            return selectedPlayer;
+        }
+
+        function deleteArray(array) {
+            for (var i = array.length - 1; i >= 0; i--) {
+                deletePlayer(i);
+            }
+        }
+
+        function deletePlayer(n) {
+            players[n] = "";
+            closeGap();
+        }
+
+        function printArray(array) {
+            console.log(array);
+        }
+
+        function closeGap() {
+            for (var i = 0; i < players.length - 1; i++) {
+                if (players[i] == "") {
+                    players[i] = players[i + 1];
+                    players[i + 1] = "";
+                }
+            }
+        }
+
+        function rng(n) { // n= amount of players
+            return Math.floor((Math.random() * n) + 1);
+        }
+    </script>
+    <title> Page Title
+    </title>
+
+    <head>
+    </head>
+
+    <body>
+        <div class="container">
+
+            <div class="row">
+                <div class="col-sm-12">
+                    <h2>Kicker Teamrandomizer</h2>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="input-group">
+                        <input id="name" required list="names" class="form-control">
+                        <span class="input-group-btn">
+                        <button class="btn btn-primary" id="addPlayer" type="button">Add Player</button>
+                    </span>
+                    </div>
+
+                    <datalist id="names">
+                        <option value="Eckhard">
+                            <option value="Jannick">
+                                <option value="Mai">
+                                    <option value="Meike">
+                                        <option value="Roby">
+                                            <option value="Ralf">
+                                                <option value="Sascha">
+                                                    <option value="Thomas">
+                    </datalist>
+
+                </div>
+                <div class="col-sm-9">
+                    <br />
+                    <button id="reset" class="btn btn-danger">Reset</button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <h3>Playerlist:</h3>
+                </div>
+            </div>
+            <div class="well">
+                <div id="playerList">
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <button class="btn btn-primary" id="randomize2Teams">Randomize 2 Teams!</button>
+                        <button class="btn btn-primary" id="randomize4Teams">Randomize 4 Teams!</button>
+                    </div>
+                </div>
+                <table class="table">
+                    <tr bgcolor="#2d2d2d">
+                        <td>
+                            <font color='white'>Team 1</font>
+                        </td>
+                        <td class="team1"></td>
+                        <td class="team1"></td>
+                    </tr>
+                    <tr bgcolor="#3b85bf">
+                        <td>
+                            <font color='white'>Team 2</font>
+                        </td>
+                        <td class="team2"></td>
+                        <td class="team2"></td>
+                    </tr>
+                    <tr bgcolor="#2d2d2d">
+                        <td>
+                            <font color='white'>Team 3</font>
+                        </td>
+                        <td class="team3"></td>
+                        <td class="team3"></td>
+                    </tr>
+                    <tr bgcolor="#3b85bf">
+                        <td>
+                            <font color='white'>Team 4</font>
+                        </td>
+                        <td class="team4"></td>
+                        <td class="team4"></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </body>
+
+</html>
